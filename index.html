@@ -7,7 +7,7 @@
 		
 		<div class='factorial'>
 			<p>
-				<span>var factorial = function(num){ <br>&nbsp;&nbsp;var current = num;<br>&nbsp;&nbsp;var result = 1;<br><br></span>
+				<span>var factorial = function(num){ <br>&nbsp;&nbsp;var result = 1;<br><br></span>
 				<span>&nbsp;&nbsp;var recurse = function(current){<br>&nbsp;&nbsp;&nbsp;&nbsp;result *= current;<br></span>
 				<span>&nbsp;&nbsp;&nbsp;&nbsp;return (current > 1) ? recurse(current - 1) : result;<br>&nbsp;&nbsp;}<br><br></span>
 				<span>&nbsp;&nbsp;var finalResult = recurse(num);<br>&nbsp;&nbsp;return finalResult;<br>};</span>
@@ -17,6 +17,7 @@
 		</div>
 		
 		<div class='container'>
+			<h3>Results: </h3>
 		</div>
 		
 	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
