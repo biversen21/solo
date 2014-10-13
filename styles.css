@@ -1,4 +1,4 @@
-.factorial {
+.factorial, .n-Queens {
   margin-left: 40px;
 	border: 1px solid black;
 	display: inline-block;
@@ -8,4 +8,9 @@
 .container {
 	border: 1px solid black;
 	display: inline-block;
+}
+
+.board {
+	display: inline-block;
+	margin: 10px;
 }
