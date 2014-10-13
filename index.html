@@ -7,10 +7,9 @@
 		
 		<div class='factorial'>
 			<p>
-				<span>var factorial = function(num){ <br>&nbsp;&nbsp;var result = 1;<br><br></span>
-				<span>&nbsp;&nbsp;var recurse = function(current){<br>&nbsp;&nbsp;&nbsp;&nbsp;result *= current;<br></span>
-				<span>&nbsp;&nbsp;&nbsp;&nbsp;return (current > 1) ? recurse(current - 1) : result;<br>&nbsp;&nbsp;}<br><br></span>
-				<span>&nbsp;&nbsp;var finalResult = recurse(num);<br>&nbsp;&nbsp;return finalResult;<br>};</span>
+				<span>var factorial = function(num){<br><br></span>
+				<span>&nbsp;&nbsp;&nbsp;&nbsp;return (current > 1) ? current * recurse(current - 1) : 1;<br><br></span>
+				<span>}</span>
 			</p>
 			<input type='integer' id='factorialNum'>
 			<button class='startFactorial'>Start</button>
