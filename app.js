@@ -5,9 +5,9 @@ $(function(){
   var factorial = function(num){
 		counter++;
 		if (num > 1) {
-			$('.container').append('<h4 class="factorialRow">factorial(' + num + ')<br> Stack: <span class="newSpan' + num + '"></span></h4>');
+			$('.container').append('<h4 class="factorialRow">factorial(' + num + ')<br> Stack: <span class="newSpan' + num + '"></span></h4><br>');
 			for (var i = 0; i < counter; i++) {
-				$(".newSpan" + num).html(' (' + (num) + ' * <span class="newSpan' + (num -1) +'">factorial(' + (num - 1) + ') </span>)');
+				$(".newSpan" + num).html(' (' + (num) + ' * <span class="factorial-span newSpan' + (num -1) +'">factorial(' + (num - 1) + ') </span>)');
 			}
 			setTimeout(function(){ return num * factorial(num - 1) }, 2000);
 		} else {
