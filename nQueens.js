@@ -20,10 +20,6 @@
       }, this);
     },
 
-    // Major Diagonals - go from top-left to bottom-right
-    // --------------------------------------------------------------
-    //
-    // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
       var i = majorDiagonalColumnIndexAtFirstRow;
       var rows = this.rows();
@@ -41,7 +37,6 @@
       return false;
     },
 
-    // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
       var rowLength = this.rows().length;
       for (var i = -rowLength; i < rowLength; i++) {
@@ -52,10 +47,6 @@
       return false;
     },
 
-    // Minor Diagonals - go from top-right to bottom-left
-    // --------------------------------------------------------------
-    //
-    // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
       var i = minorDiagonalColumnIndexAtFirstRow;
       var rows = this.rows();
@@ -73,7 +64,6 @@
       return false;
     },
 
-    // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
       var rowLength = this.rows().length * 2;
       for (var i = 0; i < rowLength; i++) {
@@ -95,6 +85,14 @@
 
 }());
 
+
+var d3func = function(boards) {
+	d3.select('.container').selectAll('p').data(boards).enter().append('p').text(function(d) {return d});
+}
+
+var boardObject = {};
+var boardsRendered = [];
+
 var renderHtml = function(board, boo) {
 	if (boo) {
 		var htmlBoard = '<div class="board success">'
@@ -102,9 +100,17 @@ var renderHtml = function(board, boo) {
 		var htmlBoard = '<div class="board fail">'
 	}
 	for (var i = 0; i < board.length; i++) {
-		htmlBoard += board[i] + '<br>';
+		board[i] = board[i].toString().replace(/,/g, ' | ').replace(/1/g, 'Q');
+		if (boardObject[i] === board[i]) {
+		  htmlBoard += '<span class="has"><u>' + board[i] + '</u></span>' + '<br>';
+	  } else {
+			boardObject[i] = board[i];
+	  	htmlBoard += '<span class="hasnot"><u>  ' + board[i] + '</u></span>' + '<br>';
+	  }
 	}
-	htmlBoard += '</div>'
+	htmlBoard += '</div>';
+	// boardsRendered.push(htmlBoard);
+	// d3func(boardsRendered);
 	$('.container').append(htmlBoard);
 }
 
@@ -139,13 +145,17 @@ window.countNQueensSolutions = function(n) {
     for(var i = 0; i < n; i++) {
       if (board.indexOf(possRows[i]) === -1){
         board.push(possRows[i]);
-        if (board.length < n) {
+				var testboard = new Board(board);
+				if (!testboard.hasAnyMajorDiagonalConflicts() && !testboard.hasAnyMinorDiagonalConflicts()) {
+					// console.log('fail');
+				}  
+				if (board.length < n) {
           generateBoard();
         }
       }
       if (board.length === n) {
         boards.push(board);
-        board = board.slice(0 ,n-1);
+        board = board.slice(0, n-1);
       }
     }
     board.pop();
@@ -164,6 +174,7 @@ window.countNQueensSolutions = function(n) {
 	  	renderHtml(possBoards[i], false);
 	  }
 	}
+	
   var index = 0;
   setInterval(function(){
 		if (index < possBoards.length) {
@@ -179,10 +190,9 @@ window.countNQueensSolutions = function(n) {
 
 $(function(){
 	$('.startNqueens').on('click', function(){
-		var start = $('#nqueensNum').val();
-    console.log(start);
+    countNQueensSolutions(5);
 	})
 })
 
-countNQueensSolutions(5);
+// countNQueensSolutions(5);
 

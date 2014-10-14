@@ -4,21 +4,16 @@ $(function(){
 	
   var factorial = function(num){
 		counter++;
-		
 		if (num > 1) {
-			$('.container').append('<h4>var current: ' + num + ' stack: <span class="newSpan' + num + '"></span></h4>');
-			
+			$('.container').append('<h4 class="factorialRow">factorial(' + num + ')<br> Stack: <span class="newSpan' + num + '"></span></h4>');
 			for (var i = 0; i < counter; i++) {
 				$(".newSpan" + num).html(' (' + (num) + ' * <span class="newSpan' + (num -1) +'">factorial(' + (num - 1) + ') </span>)');
 			}
-						
-			setTimeout(function(){return num * factorial(num - 1)}, 1000);
-			
+			setTimeout(function(){ return num * factorial(num - 1) }, 2000);
 		} else {
-			$('.container').append('<h4>var current: 1 stack: 1');
+			$('.container').append('<h4 class="factorialRow">Base Case: 1');
 			return 1;
 		}
-		
   }
 	
 	var filler = function(runs){
@@ -40,8 +35,8 @@ $(function(){
 	
 	$('.startFactorial').on('click', function(){
 		$('.container').empty();
-		var factorialStart = $('#factorialNum').val();
-		factorial(factorialStart);
-		setTimeout(function(){filler(factorialStart)}, 5000);
-	})
+		factorial(5);
+		setTimeout(function(){filler(5)}, 12000);
+	})	
+	
 });
