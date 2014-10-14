@@ -20,121 +20,6 @@
       }, this);
     },
 
-    togglePiece: function(rowIndex, colIndex) {
-      this.get(rowIndex)[colIndex] = + !this.get(rowIndex)[colIndex];
-      this.trigger('change');
-    },
-
-    _getFirstRowColumnIndexForMajorDiagonalOn: function(rowIndex, colIndex) {
-      return colIndex - rowIndex;
-    },
-
-    _getFirstRowColumnIndexForMinorDiagonalOn: function(rowIndex, colIndex) {
-      return colIndex + rowIndex;
-    },
-
-    hasAnyRooksConflicts: function() {
-      return this.hasAnyRowConflicts() || this.hasAnyColConflicts();
-    },
-
-    hasAnyQueenConflictsOn: function(rowIndex, colIndex) {
-      return (
-        this.hasRowConflictAt(rowIndex) ||
-        this.hasColConflictAt(colIndex) ||
-        this.hasMajorDiagonalConflictAt(this._getFirstRowColumnIndexForMajorDiagonalOn(rowIndex, colIndex)) ||
-        this.hasMinorDiagonalConflictAt(this._getFirstRowColumnIndexForMinorDiagonalOn(rowIndex, colIndex))
-      );
-    },
-
-    hasAnyQueensConflicts: function() {
-      return this.hasAnyRooksConflicts() || this.hasAnyMajorDiagonalConflicts() || this.hasAnyMinorDiagonalConflicts();
-    },
-
-    _isInBounds: function(rowIndex, colIndex) {
-      return (
-        0 <= rowIndex && rowIndex < this.get('n') &&
-        0 <= colIndex && colIndex < this.get('n')
-      );
-    },
-
-
-/*
-         _             _     _
-     ___| |_ __ _ _ __| |_  | |__   ___ _ __ ___ _
-    / __| __/ _` | '__| __| | '_ \ / _ \ '__/ _ (_)
-    \__ \ || (_| | |  | |_  | | | |  __/ | |  __/_
-    |___/\__\__,_|_|   \__| |_| |_|\___|_|  \___(_)
-
- */
-    /*=========================================================================
-    =                 TODO: fill in these Helper Functions                    =
-    =========================================================================*/
-
-    // ROWS - run from left to right
-    // --------------------------------------------------------------
-    //
-    // test if a specific row on this board contains a conflict
-    hasRowConflictAt: function(rowIndex) {
-      // return ((rowIndex.indexOf(1) !== rowIndex.lastIndexOf(1)) && (rowIndex.indexOf(1) > -1 && rowIndex.lastIndexOf(1) > -1)) ? false : true;
-      var counter = 0;
-      for(var i=0; i<rowIndex.length; i++){
-        if (rowIndex[i] === 1){
-          counter++;
-        }
-      }
-      return (counter >= 2 ? true : false);
-    },
-
-    // test if any rows on this board contain conflicts
-    hasAnyRowConflicts: function() {
-      var currentRows = this.rows();
-      var hasConflict = false;
-      for (var i = 0; i < currentRows.length; i++) {
-        hasConflict = this.hasRowConflictAt(currentRows[i]);
-        if (hasConflict){
-          return true;
-        }
-      }
-      return hasConflict;
-    },
-
-
-
-    // COLUMNS - run from top to bottom
-    // --------------------------------------------------------------
-    //
-    // test if a specific column on this board contains a conflict
-    hasColConflictAt: function(colIndex) {
-      var counter = 0;
-      for(var i=0; i<colIndex.length; i++){
-        if (colIndex[i] === 1){
-          counter++;
-        }
-      }
-      return (counter >= 2 ? true : false);
-    },
-
-    // test if any columns on this board contain conflicts
-    hasAnyColConflicts: function() {
-      var currentRows = this.rows();
-      var rowLength = this.rows().length;
-      var currentCol = [];
-      var hasConflict = false;
-      for (var i=0; i<rowLength; i++){
-        currentCol = [];
-        for(var j=0; j<rowLength; j++){
-          currentCol.push(currentRows[j][i]);
-        }
-        hasConflict = this.hasColConflictAt(currentCol);
-        if (hasConflict) {
-          return true;
-        }
-      }
-      return hasConflict;
-    },
-
-
-
     // Major Diagonals - go from top-left to bottom-right
     // --------------------------------------------------------------
     //
@@ -167,8 +52,6 @@
       return false;
     },
 
-
-
     // Minor Diagonals - go from top-right to bottom-left
     // --------------------------------------------------------------
     //
@@ -200,10 +83,6 @@
       }
       return false;
     }
-
-    /*--------------------  End of Helper Functions  ---------------------*/
-
-
   });
 
   var makeEmptyMatrix = function(n) {
@@ -216,8 +95,12 @@
 
 }());
 
-var renderHtml = function(board) {
-	var htmlBoard = '<div class="board">'
+var renderHtml = function(board, boo) {
+	if (boo) {
+		var htmlBoard = '<div class="board success">'
+	} else {
+		var htmlBoard = '<div class="board fail">'
+	}
 	for (var i = 0; i < board.length; i++) {
 		htmlBoard += board[i] + '<br>';
 	}
@@ -227,6 +110,7 @@ var renderHtml = function(board) {
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
+	console.log(n);
   var solutionCount = 0;
   if (n === 0) {
     solutionCount++;
@@ -261,7 +145,6 @@ window.countNQueensSolutions = function(n) {
       }
       if (board.length === n) {
         boards.push(board);
-				renderHtml(board);
         board = board.slice(0 ,n-1);
       }
     }
@@ -272,30 +155,34 @@ window.countNQueensSolutions = function(n) {
   var possRows = generatePossRows();
   var possBoards = generateBoard();
 
-  var currentBoard;
-  for(var i = 0; i < possBoards.length; i++) {
-    currentBoard = new Board (possBoards[i]);
-    if (!currentBoard.hasAnyColConflicts()) {
-      if (!currentBoard.hasAnyMajorDiagonalConflicts()) {
-        if(!currentBoard.hasAnyMinorDiagonalConflicts()) {
-          solutionCount++;
-        }
-      }
-    }
-  }
+  var runner = function(i) {
+	  currentBoard = new Board (possBoards[i]);
+	  if (!currentBoard.hasAnyMajorDiagonalConflicts() && !currentBoard.hasAnyMinorDiagonalConflicts()) {
+	    solutionCount++;
+		  renderHtml(possBoards[i], true);
+	  } else {
+	  	renderHtml(possBoards[i], false);
+	  }
+	}
+  var index = 0;
+  setInterval(function(){
+		if (index < possBoards.length) {
+	  	runner(index);
+			index++;
+		}
+  }, 500);
 
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
 };
 
+
+$(function(){
+	$('.startNqueens').on('click', function(){
+		var start = $('#nqueensNum').val();
+    console.log(start);
+	})
+})
+
 countNQueensSolutions(5);
-
-// $(function(){
-// 	$('.startNqueens').on('click', function(){
-// 		var start = $('#nqueensNum').val();
-//     console.log(start);
-// 		countNQueensSolutions(start);
-// 	})
-// })
-
 

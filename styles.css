@@ -14,3 +14,11 @@
 	display: inline-block;
 	margin: 10px;
 }
+
+.success {
+	border: 3px solid green;
+}
+
+.fail {
+	border: 1px solid red;
+}
